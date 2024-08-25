@@ -1,0 +1,38 @@
+.toolbox {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.clear-button,
+.undo-button {
+  height: 39%;
+  width: 9%;
+  margin-left: 1%;
+  border: none;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  margin-top: 20px;
+  flex-grow: 1;
+  margin-left: 10px;
+}
+
+.color-swatch {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 0 20px;
+  cursor: pointer;
+}
+
+.selected {
+  border: 2px solid #000;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
+}
