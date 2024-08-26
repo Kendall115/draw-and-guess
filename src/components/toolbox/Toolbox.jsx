@@ -7,6 +7,7 @@ import "./Toolbox.css";
 const Toolbox = ({ strokeColor, setStrokeColor }) => {
   const dispatch = useDispatch();
   const offset = useSelector((state) => state.offset);
+  const isCurrentTurn = useSelector((state) => state.gameSlice.isCurrentTurn);
 
   const colors = [
     "#FF5733",
@@ -59,10 +60,18 @@ const Toolbox = ({ strokeColor, setStrokeColor }) => {
 
   return (
     <div className="toolbox">
-      <button className="clear-button" onClick={handleClear}>
+      <button
+        disabled={!isCurrentTurn}
+        className="clear-button"
+        onClick={handleClear}
+      >
         Clear
       </button>
-      <button className="undo-button" onClick={handleUndo}>
+      <button
+        disabled={!isCurrentTurn}
+        className="undo-button"
+        onClick={handleUndo}
+      >
         Undo
       </button>
       <div className="color-palette">
@@ -70,10 +79,11 @@ const Toolbox = ({ strokeColor, setStrokeColor }) => {
           <div
             key={index}
             className={`color-swatch ${
-              strokeColor === color ? "selected" : ""
+              strokeColor === color && isCurrentTurn ? "selected" : ""
             }`}
             style={{ backgroundColor: color }}
             onClick={() => {
+              if (!isCurrentTurn) return;
               setStrokeColor(color);
             }}
           />

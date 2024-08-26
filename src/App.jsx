@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import store from "./store/store";
 import Login from "./components/login/login";
 import GameScreen from "./components/game-screen/GameScreen";
-
 import "./App.css";
 
 function App() {

@@ -1,21 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./login.css";
+import { useDispatch } from "react-redux";
+import { setIsHost } from "../../store/reducers/gameSlice";
 import { initSocket, socket } from "../../socket";
+import { setIsGameStarted } from "../../store/reducers/gameSlice";
+
+import "./login.css";
 
 function Login() {
   const [roomId, setRoomId] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [gameExistsError, setGameExistsError] = useState(false);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const handleJoinGame = () => {
     if (!roomId.trim() || !playerName.trim()) return;
 
-    initSocket(roomId);
-    socket.emit("join room", (success) => {
+    initSocket(roomId, playerName);
+    socket.emit("join room", (success, gameStatus) => {
       if (!success) return setGameExistsError(true);
+
+      dispatch(setIsGameStarted(gameStatus));
       navigate(`/game/${roomId}/${playerName}`);
     });
   };
@@ -24,8 +31,10 @@ function Login() {
     if (!roomId.trim() || !playerName.trim()) return;
 
     const uniqueRoomId = `${roomId}-${crypto.randomUUID()}`;
-    initSocket(uniqueRoomId);
+    initSocket(uniqueRoomId, playerName);
     socket.emit("create room");
+
+    dispatch(setIsHost(true));
     navigate(`/game/${uniqueRoomId}/${playerName}`);
   };
 
@@ -35,7 +44,7 @@ function Login() {
         <h1 className="login-title">Draw and Guess Game</h1>
         <div className="form-group">
           <label htmlFor="roomId" className="form-label">
-            Room ID:
+            Room Name:
           </label>
           <input
             type="text"

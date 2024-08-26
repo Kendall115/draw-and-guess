@@ -6,7 +6,6 @@ import {
   addLine,
   addPoint,
   setOffset,
-  setLines,
 } from "../../store/reducers/linesReducer";
 import "./DrawingBoard.css";
 
@@ -17,8 +16,11 @@ const DrawingBoard = ({ strokeColor }) => {
   const dispatch = useDispatch();
   const lines = useSelector((state) => state.linesReducer.lines);
   const offset = useSelector((state) => state.linesReducer.offset);
+  const isCurrentTurn = useSelector((state) => state.gameSlice.isCurrentTurn);
 
   const handleMouseDown = (e) => {
+    if (!isCurrentTurn) return;
+
     isDrawing.current = true;
     const pos = e.target.getStage().getPointerPosition();
 
@@ -33,7 +35,7 @@ const DrawingBoard = ({ strokeColor }) => {
   };
 
   const handleMouseMove = (e) => {
-    if (!isDrawing.current) return;
+    if (!isDrawing.current || !isCurrentTurn) return;
 
     const stage = e.target.getStage();
     const point = stage.getPointerPosition();
@@ -48,6 +50,8 @@ const DrawingBoard = ({ strokeColor }) => {
   };
 
   useEffect(() => {
+    console.log(lines, socket);
+
     const handleSocketDrawing = async (newLine, clientOffSet) => {
       if (
         lines.length > 0 &&
@@ -65,19 +69,12 @@ const DrawingBoard = ({ strokeColor }) => {
       dispatch(setOffset(clientOffSet));
     };
 
-    const handleRecoverLines = async (lines) => {
-      console.log(lines);
-      dispatch(setLines(lines));
-    };
-
     socket.on("drawingNewLine", handleSocketDrawing);
     socket.on("drawing", handleDrawing);
-    socket.on("recover lines", handleRecoverLines);
 
     return () => {
       socket.off("drawingNewLine", handleSocketDrawing);
       socket.off("drawing", handleSocketDrawing);
-      socket.off("recover lines", handleRecoverLines);
     };
   }, []);
 
