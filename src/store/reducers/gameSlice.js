@@ -11,7 +11,6 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     setIsGameStarted: (state, action) => {
-      console.log(action.payload, "slice");
       state.isGameStarted = action.payload;
     },
     setIsHost: (state, action) => {

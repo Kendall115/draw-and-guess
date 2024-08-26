@@ -20,7 +20,6 @@ const GameScreen = () => {
   const [strokeColor, setStrokeColor] = useState("#FF5733");
   const dispatch = useDispatch();
   const isGameStarted = useSelector((state) => state.gameSlice.isGameStarted);
-  console.log(isGameStarted, "??");
 
   const { roomId, userName } = useParams();
 
@@ -35,7 +34,6 @@ const GameScreen = () => {
 
   useEffect(() => {
     const handleRecoverLines = async (lines) => {
-      console.log("909090");
       dispatch(setLines(lines));
     };
 

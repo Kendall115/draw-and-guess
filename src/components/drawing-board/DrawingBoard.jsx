@@ -50,8 +50,6 @@ const DrawingBoard = ({ strokeColor }) => {
   };
 
   useEffect(() => {
-    console.log(lines, socket);
-
     const handleSocketDrawing = async (newLine, clientOffSet) => {
       if (
         lines.length > 0 &&
