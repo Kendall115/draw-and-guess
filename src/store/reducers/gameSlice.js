@@ -4,6 +4,9 @@ const initialState = {
   isGameStarted: false,
   isHost: false,
   isCurrentTurn: false,
+  isWaiting: true,
+  guessWord: "",
+  timeLeft: -1,
 };
 
 const gameSlice = createSlice({
@@ -16,12 +19,24 @@ const gameSlice = createSlice({
     setIsHost: (state, action) => {
       state.isHost = action.payload;
     },
-    setIsCurrentTurn: (state, action) => {
-      state.isCurrentTurn = action.payload;
+    setCurrentTurn: (state, action) => {
+      state.isCurrentTurn = action.payload.isCurrentTurn;
+      state.guessWord = action.payload.guessWord;
+    },
+    setIsWaiting: (state, action) => {
+      state.isWaiting = action.payload;
+    },
+    setTimeLeft: (state, action) => {
+      state.timeLeft = action.payload;
     },
   },
 });
 
-export const { setIsGameStarted, setIsHost, setIsCurrentTurn } =
-  gameSlice.actions;
+export const {
+  setIsGameStarted,
+  setIsHost,
+  setCurrentTurn,
+  setIsWaiting,
+  setTimeLeft,
+} = gameSlice.actions;
 export default gameSlice.reducer;

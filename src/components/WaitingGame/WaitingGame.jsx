@@ -1,26 +1,14 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsGameStarted } from "../../store/reducers/gameSlice";
+import { setIsGameStarted, setIsWaiting } from "../../store/reducers/gameSlice";
 import "./WaitingGame.css";
 import { socket } from "../../socket";
 
 const WaitingGame = () => {
-  const [isWaiting, setIsWaiting] = useState(true);
   const [countdown, setCountdown] = useState(5);
   const isHost = useSelector((state) => state.gameSlice.isHost);
+  const isWaiting = useSelector((state) => state.gameSlice.isWaiting);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const handleStartCountdown = (shouldStartCountdown) => {
-      setIsWaiting(shouldStartCountdown);
-    };
-
-    socket.on("start countdown", handleStartCountdown);
-
-    return () => {
-      socket.off("start countdown", handleStartCountdown);
-    };
-  }, []);
 
   useEffect(() => {
     if (!isWaiting && countdown > 0) {
@@ -41,7 +29,7 @@ const WaitingGame = () => {
   const handleStartButtonClick = () => {
     if (isWaiting) {
       socket.emit("start countdown");
-      setIsWaiting(false);
+      dispatch(setIsWaiting(false));
     }
   };
 
@@ -60,7 +48,6 @@ const WaitingGame = () => {
       ) : (
         <div>
           <h2>Game is starting in {countdown} seconds...</h2>
-          {/* Your game logic here */}
         </div>
       )}
     </div>

@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState("");
   const containerRef = useRef(null);
-  const currentUserName = useSelector((state) => state.chatReducer.userName);
-  const currentRoomID = useSelector((state) => state.chatReducer.roomID);
+  const currentUserName = useSelector((state) => state.socketSlice.userName);
+  const currentRoomID = useSelector((state) => state.socketSlice.roomID);
   const chatMessages = useSelector((state) => state.chatReducer.messages);
   const clientOffset = useSelector((state) => state.chatReducer.offset);
   const dispatch = useDispatch();
@@ -37,20 +37,6 @@ const Chat = () => {
 
     setInputMessage("");
   };
-
-  useEffect(() => {
-    const handleChatMessage = (message, serverOffset) => {
-      dispatch(addMessage(message));
-      dispatch(setOffset(serverOffset));
-      socket.auth.serverChatOffset = serverOffset;
-    };
-
-    socket.on("chat message", handleChatMessage);
-
-    return () => {
-      socket.off("chat message", handleChatMessage);
-    };
-  }, []);
 
   useEffect(() => {
     const element = containerRef.current;

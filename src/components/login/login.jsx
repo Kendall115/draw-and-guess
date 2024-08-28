@@ -2,40 +2,40 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setIsHost } from "../../store/reducers/gameSlice";
-import { initSocket, socket } from "../../socket";
-import { setIsGameStarted } from "../../store/reducers/gameSlice";
+import { setAuthSocket } from "../../store/reducers/socketSlice";
 
 import "./login.css";
+import { socket } from "../../socket";
 
 function Login() {
   const [roomId, setRoomId] = useState("");
-  const [playerName, setPlayerName] = useState("");
+  const [userName, setUserName] = useState("");
   const [gameExistsError, setGameExistsError] = useState(false);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const handleJoinGame = () => {
-    if (!roomId.trim() || !playerName.trim()) return;
+    if (!roomId.trim() || !userName.trim()) return;
 
-    initSocket(roomId, playerName);
-    socket.emit("join room", (success, gameStatus) => {
+    dispatch(setAuthSocket({ userName, roomID: roomId }));
+
+    socket.emit("join room", roomId, (success) => {
       if (!success) return setGameExistsError(true);
-
-      dispatch(setIsGameStarted(gameStatus));
-      navigate(`/game/${roomId}/${playerName}`);
+      navigate(`/game/${roomId}/${userName}`);
     });
   };
 
   const handleCreateGame = () => {
-    if (!roomId.trim() || !playerName.trim()) return;
+    if (!roomId.trim() || !userName.trim()) return;
 
     const uniqueRoomId = `${roomId}-${crypto.randomUUID()}`;
-    initSocket(uniqueRoomId, playerName);
-    socket.emit("create room");
 
+    dispatch(setAuthSocket({ userName, roomID: uniqueRoomId }));
     dispatch(setIsHost(true));
-    navigate(`/game/${uniqueRoomId}/${playerName}`);
+
+    socket.emit("create room", uniqueRoomId);
+    navigate(`/game/${uniqueRoomId}/${userName}`);
   };
 
   return (
@@ -56,15 +56,15 @@ function Login() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="playerName" className="form-label">
+          <label htmlFor="userName" className="form-label">
             Player Name:
           </label>
           <input
             type="text"
-            id="playerName"
+            id="userName"
             className="form-input"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
         </div>

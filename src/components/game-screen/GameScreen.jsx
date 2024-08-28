@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUser, setRoomID } from "../../store/reducers/chatReducer";
-import { initSocket, socket } from "../../socket";
-import {
-  setIsCurrentTurn,
-  setIsGameStarted,
-} from "../../store/reducers/gameSlice";
-import { setLines } from "../../store/reducers/linesReducer";
+import { socket } from "../../socket";
+import { setAuthSocket } from "../../store/reducers/socketSlice";
+import { useNavigate } from "react-router-dom";
 
 import DrawingBoard from "../drawing-board/DrawingBoard";
 import Toolbox from "../toolbox/Toolbox";
@@ -15,51 +11,29 @@ import Chat from "../chat/Chat";
 import WaitingGame from "../WaitingGame/WaitingGame";
 
 import "./GameScreen.css";
+import GameInfo from "../game-info/GameInfo";
 
 const GameScreen = () => {
   const [strokeColor, setStrokeColor] = useState("#FF5733");
   const dispatch = useDispatch();
+  const { roomID, userName } = useParams();
   const isGameStarted = useSelector((state) => state.gameSlice.isGameStarted);
+  const navigate = useNavigate();
 
-  const { roomId, userName } = useParams();
-
-  if (!socket) initSocket(roomId);
   useEffect(() => {
-    socket.emit("join room", (success) => {
-      console.log(success);
+    if (socket) return;
+
+    dispatch(setAuthSocket({ userName, roomID }));
+    socket.emit("join room", roomID, (success) => {
+      if (!success) navigate("/not-found");
     });
-    dispatch(setCurrentUser(userName));
-    dispatch(setRoomID(roomId));
-  }, []);
-
-  useEffect(() => {
-    const handleRecoverLines = async (lines) => {
-      dispatch(setLines(lines));
-    };
-
-    const handleSelectedPlayer = async () => {
-      dispatch(setIsCurrentTurn(true));
-    };
-
-    const handleRecoverGameStatus = async (gameStatus) => {
-      dispatch(setIsGameStarted(gameStatus));
-    };
-
-    socket.on("selected player", handleSelectedPlayer);
-    socket.on("recover game status", handleRecoverGameStatus);
-    socket.on("recover lines", handleRecoverLines);
-
-    return () => {
-      socket.off("selected player", handleSelectedPlayer);
-      socket.off("recover game status", handleRecoverGameStatus);
-      socket.off("recover lines", handleRecoverLines);
-    };
   }, []);
 
   return (
     <>
       <div className="container">
         <div className="column-1 rounded-corners">
+          <GameInfo roomID={roomID} />
           {isGameStarted && <DrawingBoard strokeColor={strokeColor} />}
           {!isGameStarted && <WaitingGame />}
         </div>

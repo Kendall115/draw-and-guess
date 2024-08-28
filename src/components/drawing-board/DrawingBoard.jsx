@@ -1,12 +1,8 @@
 import { Stage, Layer, Line } from "react-konva";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { socket } from "../../socket";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addLine,
-  addPoint,
-  setOffset,
-} from "../../store/reducers/linesReducer";
+import { addLine, addPoint } from "../../store/reducers/linesReducer";
 import "./DrawingBoard.css";
 
 const DrawingBoard = ({ strokeColor }) => {
@@ -49,38 +45,11 @@ const DrawingBoard = ({ strokeColor }) => {
     isDrawing.current = false;
   };
 
-  useEffect(() => {
-    const handleSocketDrawing = async (newLine, clientOffSet) => {
-      if (
-        lines.length > 0 &&
-        newLine.linesOffSet === lines[lines.length - 1].linesOffSet
-      ) {
-        return;
-      }
-
-      dispatch(addLine(newLine));
-      dispatch(setOffset(clientOffSet));
-    };
-
-    const handleDrawing = async (point, clientOffSet) => {
-      dispatch(addPoint(point));
-      dispatch(setOffset(clientOffSet));
-    };
-
-    socket.on("drawingNewLine", handleSocketDrawing);
-    socket.on("drawing", handleDrawing);
-
-    return () => {
-      socket.off("drawingNewLine", handleSocketDrawing);
-      socket.off("drawing", handleSocketDrawing);
-    };
-  }, []);
-
   return (
     <div className="drawing-board">
       <Stage
         width={window.innerWidth * 0.75}
-        height={window.innerHeight * 0.85}
+        height={window.innerHeight * 0.8}
         onMouseDown={handleMouseDown}
         onMousemove={handleMouseMove}
         onMouseup={handleMouseUp}

@@ -11,7 +11,6 @@
   margin-left: 1%;
   border: none;
   background-color: #f0f0f0;
-  cursor: pointer;
 }
 
 .color-palette {
@@ -29,7 +28,6 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 0 20px;
-  cursor: pointer;
 }
 
 .selected {

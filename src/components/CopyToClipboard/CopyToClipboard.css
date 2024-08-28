@@ -1,0 +1,30 @@
+.clipboard-container {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  left: 91%;
+  top: 35px;
+  padding: 5px 10px;
+  background-color: royalblue;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+
+  /* Add the peak */
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent royalblue;
+  }
+}
+
+.tooltip.show {
+  opacity: 1;
+}

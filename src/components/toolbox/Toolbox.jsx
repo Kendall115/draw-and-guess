@@ -1,7 +1,6 @@
-import { useEffect, useCallback } from "react";
 import { socket } from "../../socket";
 import { useDispatch, useSelector } from "react-redux";
-import { undo, clear, setOffset } from "../../store/reducers/linesReducer";
+import { undo, clear } from "../../store/reducers/linesReducer";
 import "./Toolbox.css";
 
 const Toolbox = ({ strokeColor, setStrokeColor }) => {
@@ -31,38 +30,12 @@ const Toolbox = ({ strokeColor, setStrokeColor }) => {
     socket.timeout(5000).emit("clear", offset);
   };
 
-  const handleUndoEvent = useCallback(
-    (clientOffSet) => {
-      if (offset === clientOffSet) return;
-      dispatch(undo());
-      dispatch(setOffset(clientOffSet));
-    },
-    [offset, dispatch]
-  );
-
-  const handleClearEvent = useCallback(
-    (clientOffSet) => {
-      dispatch(clear());
-      dispatch(setOffset(clientOffSet));
-    },
-    [dispatch]
-  );
-
-  useEffect(() => {
-    socket.on("undo", handleUndoEvent);
-    socket.on("clear", handleClearEvent);
-
-    return () => {
-      socket.off("undo", handleUndoEvent);
-      socket.off("clear", handleClearEvent);
-    };
-  }, []);
-
   return (
     <div className="toolbox">
       <button
         disabled={!isCurrentTurn}
         className="clear-button"
+        style={{ cursor: isCurrentTurn ? "pointer" : "" }}
         onClick={handleClear}
       >
         Clear
@@ -70,6 +43,7 @@ const Toolbox = ({ strokeColor, setStrokeColor }) => {
       <button
         disabled={!isCurrentTurn}
         className="undo-button"
+        style={{ cursor: isCurrentTurn ? "pointer" : "" }}
         onClick={handleUndo}
       >
         Undo
@@ -81,7 +55,10 @@ const Toolbox = ({ strokeColor, setStrokeColor }) => {
             className={`color-swatch ${
               strokeColor === color && isCurrentTurn ? "selected" : ""
             }`}
-            style={{ backgroundColor: color }}
+            style={{
+              backgroundColor: color,
+              cursor: isCurrentTurn ? "pointer" : "",
+            }}
             onClick={() => {
               if (!isCurrentTurn) return;
               setStrokeColor(color);
