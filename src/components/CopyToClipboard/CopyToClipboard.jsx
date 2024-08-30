@@ -21,9 +21,7 @@ const CopyToClipboard = ({ copyText }) => {
 
   return (
     <div onClick={handleCopy} className="clipboard-container">
-      <h3 style={{ display: "inline", marginRight: "10px" }}>
-        Room ID: {copyText}
-      </h3>
+      <h3 style={{ display: "inline", marginRight: "10px" }}>Copy RoomID</h3>
       <i className="far fa-clipboard" style={{ cursor: "pointer" }}></i>
       <div ref={tooltipRef} className={`tooltip ${isCopied ? "show" : ""}`}>
         Copied!

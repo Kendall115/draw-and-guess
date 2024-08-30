@@ -31,4 +31,16 @@ export const socketListeners = [
     name: "timer update",
     dispatchName: "game/setTimeLeft",
   },
+  {
+    name: "user name drawing",
+    dispatchName: "game/setUserNameDrawing",
+  },
+  {
+    name: "time is up",
+    dispatchName: "game/timeIsUp",
+  },
+  {
+    name: "play again",
+    dispatchName: "game/restartStates",
+  },
 ];

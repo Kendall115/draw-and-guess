@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { socket } from "../../socket";
 import { setAuthSocket } from "../../store/reducers/socketSlice";
 import { useNavigate } from "react-router-dom";
+import { restartStates } from "../../store/reducers/gameSlice";
+import { clear } from "../../store/reducers/linesReducer";
 
 import DrawingBoard from "../drawing-board/DrawingBoard";
 import Toolbox from "../toolbox/Toolbox";
@@ -18,7 +20,17 @@ const GameScreen = () => {
   const dispatch = useDispatch();
   const { roomID, userName } = useParams();
   const isGameStarted = useSelector((state) => state.gameSlice.isGameStarted);
+  const timeLeft = useSelector((state) => state.gameSlice.timeLeft);
+  const isCurrentTurn = useSelector((state) => state.gameSlice.isCurrentTurn);
+  const isHost = useSelector((state) => state.gameSlice.isHost);
+  const guessword = useSelector((state) => state.gameSlice.guessWord);
   const navigate = useNavigate();
+
+  const handlePlayAgain = () => {
+    dispatch(restartStates());
+    dispatch(clear());
+    socket.emit("play again");
+  };
 
   useEffect(() => {
     if (socket) return;
@@ -34,6 +46,9 @@ const GameScreen = () => {
       <div className="container">
         <div className="column-1 rounded-corners">
           <GameInfo roomID={roomID} />
+          {timeLeft === 0 && !isCurrentTurn && (
+            <h3 className="guess-word">The word is: {guessword}</h3>
+          )}
           {isGameStarted && <DrawingBoard strokeColor={strokeColor} />}
           {!isGameStarted && <WaitingGame />}
         </div>
@@ -42,8 +57,15 @@ const GameScreen = () => {
         </div>
       </div>
       <div className="toolbox">
-        {isGameStarted && (
+        {isGameStarted && timeLeft > 0 && (
           <Toolbox strokeColor={strokeColor} setStrokeColor={setStrokeColor} />
+        )}
+        {timeLeft == 0 && isGameStarted && isHost && (
+          <div className="play-again-container">
+            <button className="play-again-button" onClick={handlePlayAgain}>
+              Play Again
+            </button>
+          </div>
         )}
       </div>
     </>

@@ -1,6 +1,6 @@
 import "./Chat.css";
 import { socket } from "../../socket";
-import { addMessage, setOffset } from "../../store/reducers/chatReducer";
+import { addMessage } from "../../store/reducers/chatReducer";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -50,7 +50,13 @@ const Chat = () => {
       <div className="messages-container" ref={containerRef}>
         {chatMessages.map((message, index) => {
           return (
-            <div className="message" key={index}>
+            <div
+              className="message"
+              style={{
+                backgroundColor: message.isGuess ? "#006400" : "#36393f",
+              }}
+              key={index}
+            >
               <p>{message.userName}</p>
               <p>{message.text}</p>
             </div>

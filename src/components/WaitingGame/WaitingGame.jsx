@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsGameStarted, setIsWaiting } from "../../store/reducers/gameSlice";
+import {
+  setCountdown,
+  setIsGameStarted,
+  setIsWaiting,
+} from "../../store/reducers/gameSlice";
 import "./WaitingGame.css";
 import { socket } from "../../socket";
 
 const WaitingGame = () => {
-  const [countdown, setCountdown] = useState(5);
+  const countdown = useSelector((state) => state.gameSlice.countdown);
   const isHost = useSelector((state) => state.gameSlice.isHost);
   const isWaiting = useSelector((state) => state.gameSlice.isWaiting);
   const dispatch = useDispatch();
@@ -13,12 +17,12 @@ const WaitingGame = () => {
   useEffect(() => {
     if (!isWaiting && countdown > 0) {
       const countdownTimer = setInterval(() => {
-        setCountdown(countdown - 1);
+        dispatch(setCountdown(countdown - 1));
 
         if (countdown === 1) {
+          if (isHost) socket.emit("start game");
           clearInterval(countdownTimer);
           dispatch(setIsGameStarted(true));
-          socket.emit("start game");
         }
       }, 1000);
 
