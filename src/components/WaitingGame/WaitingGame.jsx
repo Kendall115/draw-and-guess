@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCountdown,
-  setIsGameStarted,
-  setIsWaiting,
+  gamePlaying,
+  gameCountdown,
 } from "../../store/reducers/gameSlice";
 import "./WaitingGame.css";
 import { socket } from "../../socket";
@@ -11,35 +11,35 @@ import { socket } from "../../socket";
 const WaitingGame = () => {
   const countdown = useSelector((state) => state.gameSlice.countdown);
   const isHost = useSelector((state) => state.gameSlice.isHost);
-  const isWaiting = useSelector((state) => state.gameSlice.isWaiting);
+  const gameStatus = useSelector((state) => state.gameSlice.gameStatus);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!isWaiting && countdown > 0) {
+    if (gameStatus === "countdown" && countdown > 0) {
       const countdownTimer = setInterval(() => {
         dispatch(setCountdown(countdown - 1));
 
         if (countdown === 1) {
           if (isHost) socket.emit("start game");
           clearInterval(countdownTimer);
-          dispatch(setIsGameStarted(true));
+          dispatch(gamePlaying());
         }
       }, 1000);
 
       return () => clearInterval(countdownTimer);
     }
-  }, [isWaiting, countdown]);
+  }, [gameStatus, countdown]);
 
   const handleStartButtonClick = () => {
-    if (isWaiting) {
+    if (gameStatus === "waiting") {
       socket.emit("start countdown");
-      dispatch(setIsWaiting(false));
+      dispatch(gameCountdown());
     }
   };
 
   return (
     <div className="waiting-game">
-      {isWaiting ? (
+      {gameStatus === "waiting" && (
         <div className="waiting-container">
           <h2>Waiting for the game to start...</h2>
           <div className="spinner"></div>
@@ -49,7 +49,8 @@ const WaitingGame = () => {
             </button>
           )}
         </div>
-      ) : (
+      )}
+      {gameStatus === "countdown" && (
         <div>
           <h2>Game is starting in {countdown} seconds...</h2>
         </div>

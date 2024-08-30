@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isGameStarted: false,
+  gameStatus: "waiting",
   isHost: false,
   isCurrentTurn: false,
   isWaiting: true,
   guessWord: "",
   userNameDrawing: "",
-  timeLeft: -1,
+  timeLeft: 0,
   countdown: 5,
 };
 
@@ -15,9 +15,6 @@ const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    setIsGameStarted: (state, action) => {
-      state.isGameStarted = action.payload;
-    },
     setIsHost: (state, action) => {
       state.isHost = action.payload;
     },
@@ -29,10 +26,10 @@ const gameSlice = createSlice({
       state.isWaiting = action.payload;
     },
     setUserNameDrawing: (state, action) => {
-      console.log("user name drawing", action.payload);
       state.userNameDrawing = action.payload;
     },
     setTimeLeft: (state, action) => {
+      if (action.payload === 0) state.gameStatus = "finished";
       state.timeLeft = action.payload;
     },
     timeIsUp: (state, action) => {
@@ -41,10 +38,27 @@ const gameSlice = createSlice({
     setCountdown: (state, action) => {
       state.countdown = action.payload;
     },
-    restartStates(state) {
-      state.isGameStarted = false;
+    gameCountdown(state) {
+      state.gameStatus = "countdown";
+      // if (state.countdown > 0) {
+      //   state.countdown -= 1;
+      // }
+      // if (state.countdown === 0) {
+      //   state.gameStatus = "playing";
+      // }
+    },
+    gamePlaying(state) {
+      state.gameStatus = "playing";
+    },
+    gameFinished(state) {
+      state.gameStatus = "finished";
+    },
+    gameWaiting(state) {
+      state.gameStatus = "waiting";
+    },
+    newGame(state) {
+      state.gameStatus = "countdown";
       state.isCurrentTurn = false;
-      state.isWaiting = false;
       state.guessWord = "";
       state.userNameDrawing = "";
       state.timeLeft = -1;
@@ -54,14 +68,17 @@ const gameSlice = createSlice({
 });
 
 export const {
-  setIsGameStarted,
   setIsHost,
   setCurrentTurn,
   setIsWaiting,
   setTimeLeft,
   setUserNameDrawing,
   timeIsUp,
-  restartStates,
+  newGame,
   setCountdown,
+  gameCountdown,
+  gamePlaying,
+  gameFinished,
+  gameWaiting,
 } = gameSlice.actions;
 export default gameSlice.reducer;

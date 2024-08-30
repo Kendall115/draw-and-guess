@@ -8,10 +8,6 @@ export const socketListeners = [
     dispatchName: "game/setCurrentTurn",
   },
   {
-    name: "recover game status",
-    dispatchName: "game/setIsGameStarted",
-  },
-  {
     name: "recover lines",
     dispatchName: "lines/setLines",
   },

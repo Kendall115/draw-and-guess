@@ -5,7 +5,7 @@ import "./GameInfo.css";
 const GameInfo = ({ roomID }) => {
   const guessWord = useSelector((state) => state.gameSlice.guessWord);
   const isCurrentTurn = useSelector((state) => state.gameSlice.isCurrentTurn);
-  const isGameStarted = useSelector((state) => state.gameSlice.isGameStarted);
+  const gameStatus = useSelector((state) => state.gameSlice.gameStatus);
   const userNameDrawing = useSelector(
     (state) => state.gameSlice.userNameDrawing
   );
@@ -16,7 +16,7 @@ const GameInfo = ({ roomID }) => {
       <CopyToClipboard copyText={roomID} />
       {isCurrentTurn && <h3>Draw: {guessWord}</h3>}
       <h3>
-        {isGameStarted && timeLeft > -1 && (
+        {gameStatus === "playing" && (
           <>
             <i className="fa-solid fa-clock"></i> {timeLeft} sec
           </>
