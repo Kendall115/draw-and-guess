@@ -20,8 +20,12 @@ export const socketListeners = [
     dispatchName: "lines/addPoint",
   },
   {
+    name: "start game",
+    dispatchName: "lines/clear",
+  },
+  {
     name: "start countdown",
-    dispatchName: "game/setIsWaiting",
+    dispatchName: "game/gameCountdown",
   },
   {
     name: "timer update",
@@ -31,12 +35,18 @@ export const socketListeners = [
     name: "user name drawing",
     dispatchName: "game/setUserNameDrawing",
   },
+  { name: "clear", dispatchName: "lines/clear" },
+  { name: "undo", dispatchName: "lines/undo" },
+  {
+    name: "recover game status",
+    dispatchName: "game/setGameStatus",
+  },
   {
     name: "time is up",
     dispatchName: "game/timeIsUp",
   },
   {
     name: "play again",
-    dispatchName: "game/restartStates",
+    dispatchName: "game/newGame",
   },
 ];

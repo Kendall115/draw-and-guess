@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import linesReducer from "./reducers/linesReducer";
-import chatReducer from "./reducers/chatReducer";
-import gameSlice from "./reducers/gameSlice";
-import socketSlice from "./reducers/socketSlice";
+import linesSlice from "./slices/linesSlice";
+import chatSlice from "./slices/chatSlice";
+import gameSlice from "./slices/gameSlice";
+import socketSlice from "./slices/socketSlice";
 import socketMiddleware from "./middlewares/socketMiddleware";
 
 const store = configureStore({
   reducer: {
-    linesReducer,
-    chatReducer,
+    linesSlice,
+    chatSlice,
     gameSlice,
     socketSlice,
   },

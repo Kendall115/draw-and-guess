@@ -1,6 +1,6 @@
 import { socket } from "../../socket";
 import { useDispatch, useSelector } from "react-redux";
-import { undo, clear } from "../../store/reducers/linesReducer";
+import { undo, clear } from "../../store/slices/linesSlice";
 import "./Toolbox.css";
 
 const Toolbox = ({ strokeColor, setStrokeColor }) => {
@@ -21,11 +21,13 @@ const Toolbox = ({ strokeColor, setStrokeColor }) => {
   ];
 
   const handleUndo = () => {
+    if (!isCurrentTurn) return;
     dispatch(undo());
     socket.timeout(5000).emit("undo", offset);
   };
 
   const handleClear = () => {
+    if (!isCurrentTurn) return;
     dispatch(clear());
     socket.timeout(5000).emit("clear", offset);
   };
@@ -60,7 +62,6 @@ const Toolbox = ({ strokeColor, setStrokeColor }) => {
               cursor: isCurrentTurn ? "pointer" : "",
             }}
             onClick={() => {
-              if (!isCurrentTurn) return;
               setStrokeColor(color);
             }}
           />

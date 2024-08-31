@@ -7,7 +7,7 @@ const initialState = {
   isWaiting: true,
   guessWord: "",
   userNameDrawing: "",
-  timeLeft: 0,
+  timeLeft: -1,
   countdown: 5,
 };
 
@@ -40,12 +40,6 @@ const gameSlice = createSlice({
     },
     gameCountdown(state) {
       state.gameStatus = "countdown";
-      // if (state.countdown > 0) {
-      //   state.countdown -= 1;
-      // }
-      // if (state.countdown === 0) {
-      //   state.gameStatus = "playing";
-      // }
     },
     gamePlaying(state) {
       state.gameStatus = "playing";
@@ -56,8 +50,19 @@ const gameSlice = createSlice({
     gameWaiting(state) {
       state.gameStatus = "waiting";
     },
+    setGameStatus(state, action) {
+      state.gameStatus = action.payload;
+    },
     newGame(state) {
       state.gameStatus = "countdown";
+      state.isCurrentTurn = false;
+      state.guessWord = "";
+      state.userNameDrawing = "";
+      state.timeLeft = -1;
+      state.countdown = 5;
+    },
+    resetState(state) {
+      state.gameStatus = "waiting";
       state.isCurrentTurn = false;
       state.guessWord = "";
       state.userNameDrawing = "";
@@ -80,5 +85,7 @@ export const {
   gamePlaying,
   gameFinished,
   gameWaiting,
+  setGameStatus,
+  resetState,
 } = gameSlice.actions;
 export default gameSlice.reducer;

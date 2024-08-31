@@ -1,6 +1,7 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 
-import { setAuthSocket } from "../reducers/socketSlice";
+import { setAuthSocket } from "../slices/socketSlice";
+import { newGame, setCurrentTurn } from "../slices/gameSlice";
 import { socketListeners } from "../socketConfig";
 import { initSocket, socket } from "../../socket";
 
@@ -18,6 +19,22 @@ socketMiddleware.startListening({
         listenerApi.dispatch({ type: dispatchName, payload: data });
       });
     });
+  },
+});
+
+socketMiddleware.startListening({
+  actionCreator: setCurrentTurn,
+  effect: async (action) => {
+    socket.auth.isCurrentTurn = action.payload.isCurrentTurn;
+    socket.emit("auth update", socket.auth);
+  },
+});
+
+socketMiddleware.startListening({
+  actionCreator: newGame,
+  effect: async () => {
+    socket.auth.isCurrentTurn = false;
+    socket.emit("auth update", socket.auth);
   },
 });
 

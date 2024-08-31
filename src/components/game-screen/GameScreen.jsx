@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "../../socket";
-import { setAuthSocket } from "../../store/reducers/socketSlice";
+import { setAuthSocket } from "../../store/slices/socketSlice";
 import { useNavigate } from "react-router-dom";
-import { newGame } from "../../store/reducers/gameSlice";
-import { clear } from "../../store/reducers/linesReducer";
+import { newGame } from "../../store/slices/gameSlice";
+import { clear } from "../../store/slices/linesSlice";
 
 import DrawingBoard from "../drawing-board/DrawingBoard";
 import Toolbox from "../toolbox/Toolbox";
@@ -14,6 +14,7 @@ import WaitingGame from "../WaitingGame/WaitingGame";
 
 import "./GameScreen.css";
 import GameInfo from "../game-info/GameInfo";
+import Countdown from "../countdown/Countdown";
 
 const GameScreen = () => {
   const [strokeColor, setStrokeColor] = useState("#FF5733");
@@ -45,14 +46,13 @@ const GameScreen = () => {
         <div className="column-1 rounded-corners">
           <GameInfo roomID={roomID} />
           {gameStatus === "finished" && (
-            <h3 className="guess-word">The word is: {guessword}</h3>
+            <h3 className="guess-word">The word was: {guessword}</h3>
           )}
-          {gameStatus === "playing" && (
+          {(gameStatus === "playing" || gameStatus === "finished") && (
             <DrawingBoard strokeColor={strokeColor} />
           )}
-          {(gameStatus === "waiting" || gameStatus === "countdown") && (
-            <WaitingGame />
-          )}
+          {gameStatus === "waiting" && <WaitingGame />}
+          {gameStatus === "countdown" && <Countdown />}
         </div>
         <div className="column-2 rounded-corners">
           <Chat />

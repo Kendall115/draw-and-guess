@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setIsHost } from "../../store/reducers/gameSlice";
-import { setAuthSocket } from "../../store/reducers/socketSlice";
+import { setIsHost, resetState } from "../../store/slices/gameSlice";
+import { clear } from "../../store/slices/linesSlice";
+import { setAuthSocket } from "../../store/slices/socketSlice";
 
 import "./login.css";
 import { socket } from "../../socket";
@@ -15,6 +16,11 @@ function Login() {
 
   const navigate = useNavigate();
 
+  const resetGame = () => {
+    dispatch(clear());
+    dispatch(resetState());
+  };
+
   const handleJoinGame = () => {
     if (!roomId.trim() || !userName.trim()) return;
 
@@ -22,6 +28,7 @@ function Login() {
 
     socket.emit("join room", roomId, (success) => {
       if (!success) return setGameExistsError(true);
+      resetGame();
       navigate(`/game/${roomId}/${userName}`);
     });
   };
@@ -31,6 +38,7 @@ function Login() {
 
     const uniqueRoomId = `${roomId}-${crypto.randomUUID()}`;
 
+    resetGame();
     dispatch(setAuthSocket({ userName, roomID: uniqueRoomId }));
     dispatch(setIsHost(true));
 

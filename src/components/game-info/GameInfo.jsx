@@ -16,13 +16,19 @@ const GameInfo = ({ roomID }) => {
       <CopyToClipboard copyText={roomID} />
       {isCurrentTurn && <h3>Draw: {guessWord}</h3>}
       <h3>
-        {gameStatus === "playing" && (
+        {gameStatus === "playing" && timeLeft > 0 && (
           <>
             <i className="fa-solid fa-clock"></i> {timeLeft} sec
           </>
         )}
       </h3>
-      {userNameDrawing && <h3>{userNameDrawing} is drawing</h3>}
+      {userNameDrawing && (
+        <h3>
+          {isCurrentTurn
+            ? "Your turn drawing"
+            : `${userNameDrawing} is drawing`}
+        </h3>
+      )}
     </div>
   );
 };

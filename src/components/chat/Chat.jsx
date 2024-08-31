@@ -1,6 +1,6 @@
 import "./Chat.css";
 import { socket } from "../../socket";
-import { addMessage } from "../../store/reducers/chatReducer";
+import { addMessage } from "../../store/slices/chatSlice";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,8 +9,8 @@ const Chat = () => {
   const containerRef = useRef(null);
   const currentUserName = useSelector((state) => state.socketSlice.userName);
   const currentRoomID = useSelector((state) => state.socketSlice.roomID);
-  const chatMessages = useSelector((state) => state.chatReducer.messages);
-  const clientOffset = useSelector((state) => state.chatReducer.offset);
+  const chatMessages = useSelector((state) => state.chatSlice.messages);
+  const clientOffset = useSelector((state) => state.chatSlice.offset);
   const dispatch = useDispatch();
 
   const handleInputChange = (event) => {
@@ -30,7 +30,6 @@ const Chat = () => {
     const messageWithClientOffset = `${socket.id}-${clientOffset}`;
 
     dispatch(addMessage(newMessage));
-
     socket
       .timeout(5000)
       .emit("chat message", newMessage, messageWithClientOffset);
@@ -57,7 +56,7 @@ const Chat = () => {
               }}
               key={index}
             >
-              <p>{message.userName}</p>
+              {message.username !== "" && <p>{message.userName}</p>}
               <p>{message.text}</p>
             </div>
           );

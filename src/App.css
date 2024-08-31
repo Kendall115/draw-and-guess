@@ -1,3 +1,16 @@
+:root {
+  --primary-color: #3498db;
+  --primary-hover-color: #2980b9;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+}
+
 html {
   box-sizing: border-box;
 }
