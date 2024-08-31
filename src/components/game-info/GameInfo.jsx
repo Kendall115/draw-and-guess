@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import CopyToClipboard from "../CopyToClipboard/CopyToClipboard";
+import CopyToClipboard from "../copy-to-clipboard/CopyToClipboard";
 import "./GameInfo.css";
 
 const GameInfo = ({ roomID }) => {

@@ -10,7 +10,7 @@ import { clear } from "../../store/slices/linesSlice";
 import DrawingBoard from "../drawing-board/DrawingBoard";
 import Toolbox from "../toolbox/Toolbox";
 import Chat from "../chat/Chat";
-import WaitingGame from "../WaitingGame/WaitingGame";
+import WaitingGame from "../waiting-game/WaitingGame";
 
 import "./GameScreen.css";
 import GameInfo from "../game-info/GameInfo";
