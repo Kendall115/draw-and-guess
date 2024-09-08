@@ -49,4 +49,8 @@ export const socketListeners = [
     name: "play again",
     dispatchName: "game/newGame",
   },
+  {
+    name: "update player list",
+    dispatchName: "game/setConnectedPlayers",
+  },
 ];

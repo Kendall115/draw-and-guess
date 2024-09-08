@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { socket } from "../../socket";
 import { setAuthSocket } from "../../store/slices/socketSlice";
 import { useNavigate } from "react-router-dom";
-import { newGame } from "../../store/slices/gameSlice";
+import { newGame, setConnectedPlayers } from "../../store/slices/gameSlice";
 import { clear } from "../../store/slices/linesSlice";
 
 import DrawingBoard from "../drawing-board/DrawingBoard";
@@ -32,9 +32,16 @@ const GameScreen = () => {
   };
 
   useEffect(() => {
-    if (socket) return;
+    if (socket) {
+      socket.emit("get player list", (players) => {
+        console.log({ players });
+        dispatch(setConnectedPlayers(players));
+      });
+      return;
+    }
 
     dispatch(setAuthSocket({ userName, roomID }));
+
     socket.emit("join room", roomID, (success) => {
       if (!success) navigate("/not-found");
     });

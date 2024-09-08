@@ -5,6 +5,9 @@ import "./WaitingGame.css";
 
 const WaitingGame = () => {
   const isHost = useSelector((state) => state.gameSlice.isHost);
+  const connectedPlayers = useSelector(
+    (state) => state.gameSlice.connectedPlayers
+  );
   const dispatch = useDispatch();
 
   const handleStartButtonClick = () => {
@@ -16,6 +19,7 @@ const WaitingGame = () => {
     <div className="flex-center">
       <div className="waiting-container">
         <h2>Waiting for the game to start...</h2>
+        <h3>Players in room: {connectedPlayers.join(", ")}</h3>
         <div className="spinner"></div>
         {isHost && (
           <button className="start-button" onClick={handleStartButtonClick}>

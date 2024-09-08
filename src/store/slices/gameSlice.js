@@ -9,6 +9,7 @@ const initialState = {
   userNameDrawing: "",
   timeLeft: -1,
   countdown: 5,
+  connectedPlayers: [],
 };
 
 const gameSlice = createSlice({
@@ -53,6 +54,9 @@ const gameSlice = createSlice({
     setGameStatus(state, action) {
       state.gameStatus = action.payload;
     },
+    setConnectedPlayers(state, action) {
+      state.connectedPlayers = action.payload;
+    },
     newGame(state) {
       state.gameStatus = "countdown";
       state.isCurrentTurn = false;
@@ -86,6 +90,7 @@ export const {
   gameFinished,
   gameWaiting,
   setGameStatus,
+  setConnectedPlayers,
   resetState,
 } = gameSlice.actions;
 export default gameSlice.reducer;
